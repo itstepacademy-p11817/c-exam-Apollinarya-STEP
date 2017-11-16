@@ -7,7 +7,7 @@
 #include"sea_funk.h"
 
 
-int main(int argc, char* argv[])
+int shmain(int argc, char* argv[])
 {
 	srand(time(NULL));
 	int field_user0[10][10] = { 0 };
@@ -92,10 +92,7 @@ int main(int argc, char* argv[])
 	int hit_u0 = 0;  // podschet popadanij igroka 0
 	int hit_u1 = 0; // podschet popadanij igroka 1
 	int count = 1; // podschet hodov igrokov
-	int coor_ind[4][2] = { 0 };
-	int ind = 0;
-	int last_good_hit[2] = { 0 };
-	bool good_hint = false;
+	char letters[11] = { 'A','B','C','D', 'E', 'F', 'G', 'H', 'I', 'J' };
 	while (true)
 	{
 		int coll = 0;
@@ -131,64 +128,31 @@ int main(int argc, char* argv[])
 		}
 		if (strcmp(answ_u1, "bot") == 0)
 		{
-			row = rand() % 10;
-			coll = rand() % 10;
 			while (hit1 && hit_u1<20)
 			{
-				if (good_hint)
-				{
-					row = coor_ind[ind][0];
-					coll = coor_ind[ind][1];
-				}
-				else
-				{
-					if (ind == 4)
-					{
-						ind = 0;
-						row = rand() % 10;
-						coll = rand() % 10;
-					}
-					ind++;
-					row = coor_ind[ind][0];
-					coll = coor_ind[ind][1];
-					
-				}
-				if (row > 9 || row < 0)
-				{
-					row = last_good_hit[0];
-				}
-				if (coll > 9 || coll < 0)
-				{
-					coll = last_good_hit[0];
-				}// get row and coll
+				system("CLS");
+				printf("User two is hitting...\n\nMove: %d\n\n", count);
+				//print_field(ptr_fuser0, ptr_fuser1);
+				row = rand() % 10;
+				coll = rand() % 10;
 				if (field_user0[row][coll] == 0) // check hint
 				{
 					field_user0[row][coll] += 1;
 					count++;
+					print_field(ptr_fuser0, ptr_fuser1);
+					printf("Coordinates %c-%d    MISS\n", letters[coll], row + 1);
+					system("pause");
 					hit1 = false;
 					hit0 = true;
 				}
 				else if (field_user0[row][coll] == 2)
 				{
 					field_user0[row][coll] += 1;
+					print_field(ptr_fuser0, ptr_fuser1);
+					printf("Coordinates %c-%d    HIT\n", letters[coll], row + 1);
+					system("pause");
 					count++;
 					hit_u1++;
-					last_good_hit[0] = row;
-					last_good_hit[1] = coll;
-					coor_ind[0][0] = row - 1;
-					coor_ind[0][1] = coll;
-					coor_ind[1][0] = row;
-					coor_ind[1][1] = coll + 1;
-					coor_ind[2][0] = row + 1;
-					coor_ind[2][1] = coll;
-					coor_ind[3][0] = row;
-					coor_ind[3][1] = coll - 1;
-					good_hint = true;
-				}
-				else
-				{
-					good_hint = false;
-					ind == 4;
 				}
 			}
 		}
@@ -222,12 +186,12 @@ int main(int argc, char* argv[])
 					print_new_wind("You already shoot this place! ");
 				}
 			}
-			if (hit_u0 == 20)
+			if (hit_u0 == 20) // proverka na pobedu
 			{
 				printf("\n      User one win!\n\n");
 				break;
 			}
-			else if (hit_u1 == 20)
+			else if (hit_u1 == 20) // proverka na pobedu
 			{
 				printf("\n      User two win!\n\n");
 				break;
